@@ -1,0 +1,56 @@
+blueprint:
+  name: Switch Inching
+  description: Turn off switch after a duration
+  domain: automation
+  input:
+    switch_target:
+      name: Switch
+      selector:
+        target:
+          entity:
+            domain: switch
+    inching_duration:
+      name: Duration
+      description: Time before switch automatically turn off
+      default: 120
+      selector:
+        number:
+          min: 1
+          max: 1440
+          unit_of_measurement: minutes
+
+# If motion is detected within the delay,
+# we restart the script.
+mode: restart
+max_exceeded: silent
+
+trigger:
+  - id: turn_on
+    platform: state
+    entity_id: !input switch_target
+    from: "off"
+    to: "on"
+    for:
+      milliseconds: 200
+  - id: turn_off
+    platform: state
+    entity_id: !input switch_target
+    from: "on"
+    to: "off"
+    for:
+      milliseconds: 200
+
+action:
+  - choose:
+      - conditions:
+          - condition: trigger
+            id: turn_on
+        sequence:
+          - delay: !input inching_duration
+          - service: switch.turn_off
+            target: !input switch_target
+      - conditions:
+          - condition: trigger
+            id: turn_off
+        sequence:
+          - stop: Switch turn off manually
