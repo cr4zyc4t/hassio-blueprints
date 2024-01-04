@@ -16,8 +16,8 @@ blueprint:
       selector:
         duration:
 
-# If motion is detected within the delay,
-# we restart the script.
+# restart automation to cancel overlapping effect 
+# not necessary since we handle both on and off scenario but keep it here to ensure
 mode: restart
 max_exceeded: silent
 
