@@ -1,0 +1,49 @@
+blueprint:
+  name: Switches Linking
+  description: Link multiple switches operation
+  domain: automation
+  input:
+    input_switches:
+      name: Switch
+      selector:
+        entity:
+          multiple: true
+          filter:
+            domain: switch
+
+# restart automation to make debounce effect
+mode: restart
+max_exceeded: silent
+
+trigger:
+  - id: turn_on
+    platform: state
+    entity_id: !input input_switches
+    from: "off"
+    to: "on"
+  - id: turn_off
+    platform: state
+    entity_id: !input input_switches
+    from: "on"
+    to: "off"
+
+action:
+  - choose:
+      - conditions:
+          - condition: trigger
+            id: turn_on
+        sequence:
+          - delay:
+              milliseconds: 700
+          - service: switch.turn_on
+            target:
+              entity_id: !input input_switches
+      - conditions:
+          - condition: trigger
+            id: turn_off
+        sequence:
+          - delay:
+              milliseconds: 700
+          - service: switch.turn_off
+            target:
+              entity_id: !input input_switches
