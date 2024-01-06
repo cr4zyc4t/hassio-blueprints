@@ -9,7 +9,9 @@ blueprint:
         entity:
           multiple: true
           filter:
-            domain: switch
+            domain:
+              - switch
+              - light
 
 # restart automation to make debounce effect
 mode: restart
@@ -34,8 +36,8 @@ action:
             id: turn_on
         sequence:
           - delay:
-              milliseconds: 700
-          - service: switch.turn_on
+              milliseconds: 600
+          - service: homeassistant.turn_on
             target:
               entity_id: !input input_switches
       - conditions:
@@ -43,7 +45,7 @@ action:
             id: turn_off
         sequence:
           - delay:
-              milliseconds: 700
-          - service: switch.turn_off
+              milliseconds: 600
+          - service: homeassistant.turn_off
             target:
               entity_id: !input input_switches

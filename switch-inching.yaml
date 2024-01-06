@@ -8,7 +8,9 @@ blueprint:
       selector:
         entity:
           filter:
-            domain: switch
+            domain:
+              - switch
+              - light
     inching_duration:
       name: Duration
       description: Time before switch automatically turn off
@@ -44,6 +46,6 @@ action:
             id: turn_on
         sequence:
           - delay: !input inching_duration
-          - service: switch.turn_off
+          - service: homeassistant.turn_off
             target:
               entity_id: !input switch_target
